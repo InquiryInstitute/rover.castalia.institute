@@ -1,0 +1,64 @@
+---
+interface Props {
+  title: string;
+  description?: string;
+}
+const { title, description = 'Autonomous Field Rover — Castalia Institute' } = Astro.props;
+---
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content={description} />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <title>{title}</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+</head>
+<body>
+  <slot />
+</body>
+</html>
+
+<style is:global>
+  :root {
+    --c-bg: #050508;
+    --c-surface: #0c0c12;
+    --c-surface-2: #14141e;
+    --c-border: #1e1e2e;
+    --c-text: #e4e4ed;
+    --c-text-muted: #8888a0;
+    --c-accent: #f0a830;
+    --c-accent-dim: rgba(240, 168, 48, 0.15);
+    --c-red: #e05555;
+    --c-green: #55c077;
+    --c-blue: #5588dd;
+    --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+    --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+    --max-w: 1200px;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: var(--font-sans);
+    background: var(--c-bg);
+    color: var(--c-text);
+    line-height: 1.7;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  ::selection {
+    background: var(--c-accent);
+    color: var(--c-bg);
+  }
+
+  a { color: var(--c-accent); text-decoration: none; transition: opacity 0.2s; }
+  a:hover { opacity: 0.85; }
+
+  img { max-width: 100%; height: auto; display: block; }
+</style>
