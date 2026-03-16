@@ -1,0 +1,16 @@
+{
+  "Comment": "Point rover.castalia.institute to GitHub Pages",
+  "Changes": [
+    {
+      "Action": "UPSERT",
+      "ResourceRecordSet": {
+        "Name": "rover.castalia.institute.",
+        "Type": "CNAME",
+        "TTL": 3600,
+        "ResourceRecords": [
+          { "Value": "inquiryinstitute.github.io" }
+        ]
+      }
+    }
+  ]
+}
