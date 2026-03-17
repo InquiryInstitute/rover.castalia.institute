@@ -24,26 +24,29 @@ import Base from '../layouts/Base.astro';
 
 <!-- ─── HERO ─────────────────────────────────────────────── -->
 <section class="hero">
+  <canvas id="starfield" class="hero-stars"></canvas>
   <div class="hero-bg">
     <img
       src="https://images.unsplash.com/photo-1615244895949-e0aa324843bb?w=1920&q=80&auto=format&fit=crop"
-      alt="Great Sand Dunes, San Luis Valley, Colorado"
+      alt="Lunar-analog terrain, San Luis Valley"
       loading="eager"
     />
     <div class="hero-overlay"></div>
   </div>
+  <div class="hero-scanlines"></div>
   <div class="hero-content">
-    <div class="hero-badge">Castalia Institute &middot; Design Document v0.1</div>
-    <h1>Autonomous<br />Field Rover</h1>
+    <div class="hero-badge">Castalia Institute &middot; Lunar Proving Grounds</div>
+    <h1>Lunar Proving<br />Grounds</h1>
     <p class="hero-sub">
-      A modular robotic platform for environmental sensing, terrain exploration,
-      and autonomous navigation&mdash;built for the high desert.
+      Autonomous rover operations on lunar-analog terrain&mdash;regolith
+      navigation, environmental sensing, and mission autonomy tested
+      in the high desert of the San Luis Valley.
     </p>
     <div class="hero-tags">
-      <span>Environmental Sensing</span>
-      <span>Terrain Mapping</span>
-      <span>Autonomous Navigation</span>
-      <span>Scientific Fieldwork</span>
+      <span>Regolith Navigation</span>
+      <span>Crater Mapping</span>
+      <span>Autonomous Ops</span>
+      <span>Lunar-Analog Science</span>
     </div>
     <div class="hero-cta">
       <a href="#overview" class="btn btn-primary">Explore the Design</a>
@@ -59,23 +62,23 @@ import Base from '../layouts/Base.astro';
 <section class="terrain-strip">
   <div class="terrain-inner">
     <div class="terrain-item">
-      <span class="terrain-label">Desert Steppe</span>
+      <span class="terrain-label">Regolith Basin</span>
     </div>
     <div class="terrain-divider"></div>
     <div class="terrain-item">
-      <span class="terrain-label">Volcanic Gravel</span>
+      <span class="terrain-label">Crater Rim</span>
     </div>
     <div class="terrain-divider"></div>
     <div class="terrain-item">
-      <span class="terrain-label">Alluvial Fans</span>
+      <span class="terrain-label">Mare Basalt</span>
     </div>
     <div class="terrain-divider"></div>
     <div class="terrain-item">
-      <span class="terrain-label">Scrubland</span>
+      <span class="terrain-label">Highland Rubble</span>
     </div>
     <div class="terrain-divider"></div>
     <div class="terrain-item">
-      <span class="terrain-label">San Luis Valley</span>
+      <span class="terrain-label">Impact Ejecta</span>
     </div>
   </div>
 </section>
@@ -143,18 +146,18 @@ import Base from '../layouts/Base.astro';
     <div class="env-grid">
       <div class="env-card">
         <div class="env-value">-20&deg;C&ndash;40&deg;C</div>
-        <div class="env-label">Temperature Range</div>
+        <div class="env-label">Surface Temp Range</div>
       </div>
       <div class="env-card">
-        <div class="env-value">High</div>
-        <div class="env-label">Dust Exposure</div>
+        <div class="env-value">Abrasive</div>
+        <div class="env-label">Regolith Exposure</div>
       </div>
       <div class="env-card">
-        <div class="env-value">Strong</div>
-        <div class="env-label">Wind Conditions</div>
+        <div class="env-value">0.2&ndash;1.0 g</div>
+        <div class="env-label">Sim. Gravity Range</div>
       </div>
       <div class="env-card">
-        <div class="env-value">Uneven</div>
+        <div class="env-value">Unstructured</div>
         <div class="env-label">Terrain Profile</div>
       </div>
     </div>
@@ -627,14 +630,14 @@ import Base from '../layouts/Base.astro';
     overflow: hidden;
   }
   .hero-bg { position: absolute; inset: 0; }
-  .hero-bg img { width: 100%; height: 100%; object-fit: cover; }
+  .hero-bg img { width: 100%; height: 100%; object-fit: cover; filter: grayscale(0.85) contrast(1.15) brightness(0.45); }
   .hero-overlay {
     position: absolute; inset: 0;
     background: linear-gradient(
       to bottom,
-      rgba(5,5,8,0.5) 0%,
-      rgba(5,5,8,0.7) 50%,
-      rgba(5,5,8,0.95) 100%
+      rgba(5,7,13,0.3) 0%,
+      rgba(5,7,13,0.55) 50%,
+      rgba(5,7,13,0.95) 100%
     );
   }
   .hero-content {
@@ -676,6 +679,29 @@ import Base from '../layouts/Base.astro';
   @keyframes bob {
     0%, 100% { transform: translateX(-50%) translateY(0); }
     50% { transform: translateX(-50%) translateY(8px); }
+  }
+
+  .hero-stars {
+    position: absolute; inset: 0; z-index: 0;
+    pointer-events: none;
+  }
+  .hero-scanlines {
+    position: absolute; inset: 0; z-index: 3;
+    pointer-events: none;
+    background: repeating-linear-gradient(
+      to bottom,
+      transparent 0px, transparent 3px,
+      rgba(0, 15, 30, 0.06) 3px, rgba(0, 15, 30, 0.06) 4px
+    );
+  }
+  .hero::after {
+    content: ''; position: absolute; inset: 0; z-index: 1;
+    pointer-events: none;
+    background: radial-gradient(
+      ellipse at 50% 120%,
+      rgba(142, 184, 216, 0.06) 0%,
+      transparent 70%
+    );
   }
 
   /* ─── BUTTONS ─────────────────────────────────── */
@@ -987,3 +1013,27 @@ import Base from '../layouts/Base.astro';
     .footer-inner { flex-direction: column; gap: 1rem; text-align: center; }
   }
 </style>
+
+<script>
+  const canvas = document.getElementById('starfield');
+  if (canvas) {
+    const ctx = canvas.getContext('2d');
+    const stars = Array.from({ length: 400 }, () => ({
+      x: Math.random(), y: Math.random(),
+      r: Math.random() * 1.5 + 0.2,
+      a: Math.random() * 0.7 + 0.1,
+    }));
+    function draw() {
+      canvas.width = canvas.parentElement.offsetWidth;
+      canvas.height = canvas.parentElement.offsetHeight;
+      for (const s of stars) {
+        ctx.beginPath();
+        ctx.arc(s.x * canvas.width, s.y * canvas.height, s.r, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(190, 215, 245, ${s.a})`;
+        ctx.fill();
+      }
+    }
+    draw();
+    window.addEventListener('resize', draw);
+  }
+</script>
